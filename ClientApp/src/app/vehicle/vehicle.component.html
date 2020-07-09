@@ -1,0 +1,41 @@
+<h1>Vehicle Details</h1>
+
+<div class="card bg-light">
+  <div class="card-body">
+    <div class="form-group">
+      <select [(ngModel)]="filter.makeId" name="selectedMake" (change)="OnFilterVehicles()" class="form-control">
+        <option value="">--All--</option>
+        <option *ngFor="let m of makes" [value]="m.id">{{m.name}}</option>
+      </select>
+    </div>
+    <button type="button" (click)="ResetFilters()">Reset Filters</button>
+  </div>
+</div>
+
+<table *ngIf="vehicles" class="table mt-3">
+  <thead class="thead-dark">
+    <tr>
+      <th *ngFor="let c of columns" scope="col">
+        <div *ngIf="c.isSortable" (click)="SortBy(c.key)">
+          <i *ngIf="filter.sortBy === c.key" class="fa" [class.fa-sort-asc]="filter.isSortAscending"
+            [class.fa-sort-desc]="!filter.isSortAscending"></i>
+          {{c.title}}
+        </div>
+        <div *ngIf="!c.isSortable">
+          {{c.title}}
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let v of filteredVehicles">
+      <td>{{v.id}}</td>
+      <td>{{v.make.name}}</td>
+      <td>{{v.model.name}}</td>
+      <td>{{v.contact.name}}</td>
+      <td><a [routerLink]="['/vehicles/',v.id]">View</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<app-pagination [total-items]="filter.totalItems" [page-size]="filter.pageSize" (page-changed) = "OnPageChanged($event)"></app-pagination>
